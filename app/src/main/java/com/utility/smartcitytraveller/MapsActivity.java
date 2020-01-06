@@ -19,6 +19,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -182,10 +183,13 @@ public class MapsActivity extends AppCompatActivity {
 
     private void sendSMS(String phoneNumber, String message)
     {
+        Intent pInten = new Intent(this, ProfileActivity.class);
+        pInten.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pi = PendingIntent.getActivity(this, 0,
-                new Intent(this, ProfileActivity.class), 0);
+                pInten, 0);
         SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(phoneNumber, null, message, pi, null);
+        sms.sendTextMessage(phoneNumber, null, message, null, null);
+        Toast.makeText(this, "Message sent to " + phoneNumber + "!!", Toast.LENGTH_LONG).show();
     }
 
     public void markLoggedOut() {

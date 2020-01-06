@@ -1,6 +1,7 @@
 package com.utility.smartcitytraveller;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,8 +11,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.telephony.SmsManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -171,8 +174,18 @@ public class MapsActivity extends AppCompatActivity {
         } else if (id == R.id.action_profile) {
             goToProfileActivity();
         } else if (id == R.id.action_sos) {
+            compileSms();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void sendSMS(String phoneNumber, String message)
+    {
+        PendingIntent pi = PendingIntent.getActivity(this, 0,
+                new Intent(this, ProfileActivity.class), 0);
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, pi, null);
     }
 
     public void markLoggedOut() {
@@ -209,5 +222,45 @@ public class MapsActivity extends AppCompatActivity {
         Intent mapsScreen = new Intent(MapsActivity.this, ProfileActivity.class);
 //        mapsScreen.addFlags(FLAG_ACTIVITY_CLEAR_TOP|FLAG_ACTIVITY_NEW_TASK|FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mapsScreen);
+    }
+
+
+    public void compileSms() {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String name1 = sharedPref.getString( "name_1", null);
+        String name2 = sharedPref.getString( "name_2", null);
+        String name3 = sharedPref.getString( "name_3", null);
+
+        String num1 = sharedPref.getString( "number_1", null);
+        String num2 = sharedPref.getString( "number_2", null);
+        String num3 = sharedPref.getString( "number_3", null);
+
+        String myName = sharedPref.getString( "Your_Name", null);
+
+        String SMS_CONTENT = "Your Friend, ";
+        if (myName != null) {
+            SMS_CONTENT = SMS_CONTENT + myName;
+        }
+
+        SMS_CONTENT = SMS_CONTENT + " , at location: ";
+
+        String location = "http://maps.google.com/maps?daddr=" + HomeFragment.lastLocation.getLatitude() + "," + HomeFragment.lastLocation.getLongitude();// + "&daddr=null,null"
+
+        SMS_CONTENT = SMS_CONTENT + location;
+
+        SMS_CONTENT = SMS_CONTENT + " needs help.";
+
+        if (num1 != null) {
+            sendSMS(num1, SMS_CONTENT);
+        }
+
+        if (num2 != null) {
+            sendSMS(num2, SMS_CONTENT);
+        }
+
+        if (num3 != null) {
+            sendSMS(num3, SMS_CONTENT);
+        }
+
     }
 }

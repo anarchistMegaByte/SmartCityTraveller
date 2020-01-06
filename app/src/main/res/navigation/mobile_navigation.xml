@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_petrol_pump">
+
+    <fragment
+        android:id="@+id/navigation_petrol_pump"
+        android:name="com.utility.smartcitytraveller.ui.home.HomeFragment"
+        android:label="@string/title_petrol_pump"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_garage"
+        android:name="com.utility.smartcitytraveller.ui.home.HomeFragment"
+        android:label="@string/title_garage"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_hospital"
+        android:name="com.utility.smartcitytraveller.ui.home.HomeFragment"
+        android:label="@string/title_hospital"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_police"
+        android:name="com.utility.smartcitytraveller.ui.home.HomeFragment"
+        android:label="@string/title_police"
+        tools:layout="@layout/fragment_home" />
+</navigation>

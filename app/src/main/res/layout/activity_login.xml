@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity"
+    android:background="@drawable/login_wo_logo"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="210dp"
+            android:layout_height="170dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/logo">
+
+        </ImageView>
+        <TextView
+            android:layout_below="@+id/iv_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SMART CITY TRAVELLER"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:textSize="25sp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:gravity="center">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_username"
+                android:hint="Username"
+                android:layout_marginBottom="16dp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="36dp"
+                android:layout_marginLeft="36dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxStrokeColor="#6666ff"
+                app:boxStrokeWidth="2dp"
+                app:hintTextColor="#6666ff"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_password"
+                android:layout_below="@+id/til_username"
+                android:hint="Password"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="36dp"
+                android:layout_marginLeft="36dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:boxStrokeColor="#6666ff"
+                app:boxStrokeWidth="2dp"
+                app:hintTextColor="#6666ff"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:inputType="textPassword"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="end">
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_marginRight="36dp"
+                android:layout_below="@+id/et_password"
+                android:layout_alignRight="@+id/et_password"
+                android:layout_width="150dp"
+                android:layout_height="60dp"
+                android:textSize="20sp"
+                android:text="Login" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign in using "
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/tv_facial_recognition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Facial Recognition"
+            android:textColor="#6666ff"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+</LinearLayout>

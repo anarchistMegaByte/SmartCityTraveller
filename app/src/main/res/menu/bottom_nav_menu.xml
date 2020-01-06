@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_petrol_pump"
+        android:icon="@drawable/petrol_pump_icon"
+        android:title="@string/title_petrol_pump" />
+
+    <item
+        android:id="@+id/navigation_garage"
+        android:icon="@drawable/garage_icon"
+        android:title="@string/title_garage" />
+
+    <item
+        android:id="@+id/navigation_hospital"
+        android:icon="@drawable/hospital_icon"
+        android:title="@string/title_hospital" />
+
+    <item
+        android:id="@+id/navigation_police"
+        android:icon="@drawable/police_icon"
+        android:title="@string/title_police" />
+
+</menu>

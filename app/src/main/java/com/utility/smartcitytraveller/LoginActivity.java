@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -30,6 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.HashMap;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -54,11 +57,14 @@ public class LoginActivity extends AppCompatActivity implements FingerPrintAuthH
     private KeyStore keyStore;
     private KeyGenerator keyGenerator;
 
-
+    HashMap<String, String> userPass = new HashMap<>();
     ImageView ivTryAhain;
     FrameLayout flTryAgain;
     FrameLayout flfingerPrintSensor;
     ImageView ivClose;
+    private TextInputEditText etUserName;
+    private TextInputEditText etPassword;
+
 
 
     @Override
@@ -71,6 +77,13 @@ public class LoginActivity extends AppCompatActivity implements FingerPrintAuthH
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
 
+        userPass.put("Sheshadri", "sheshadri123");
+        userPass.put("Gaurav", "gaurav123");
+        userPass.put("Shreyas", "shreyas123");
+        userPass.put("User", "user123");
+
+        etUserName = findViewById(R.id.et_username);
+        etPassword = findViewById(R.id.et_password);
         ivClose = findViewById(R.id.iv_close);
         flfingerPrintSensor = findViewById(R.id.fl_finger_print_sensor);
         ivClose.setOnClickListener(new View.OnClickListener() {
@@ -104,8 +117,20 @@ public class LoginActivity extends AppCompatActivity implements FingerPrintAuthH
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                markLoggedIn();
-                goToMapsActivity();
+                String userName = etUserName.getText().toString();
+                String password = etPassword.getText().toString();
+                if (userPass.containsKey(userName)) {
+                    String passswordreal = userPass.get(userName);
+                    if (passswordreal.equals(password)) {
+                        markLoggedIn();
+                        goToMapsActivity();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Invalid Password.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(LoginActivity.this, "Invalid Username.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 

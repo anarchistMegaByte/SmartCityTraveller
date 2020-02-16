@@ -19,10 +19,16 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.utility.smartcitytraveller.ui.home.HomeFragment;
@@ -39,13 +45,29 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import de.siegmar.fastcsv.reader.CsvParser;
+import de.siegmar.fastcsv.reader.CsvReader;
+import de.siegmar.fastcsv.reader.CsvRow;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static java.lang.Math.round;
 
 public class MapsActivity extends AppCompatActivity {
 
+    FrameLayout flSos;
+    LinearLayout llPolice;
+    LinearLayout llHospital;
+    LinearLayout llGarage;
+    LinearLayout llClose;
     private FusedLocationProviderClient mFusedLocationClient;
     public static final String ROOT_FOLDER_NAME = "SmartCityTraveller";
     public static final String ROOT_PATH_FOR_SAVING_TRIP_FOLDERS = Environment.getExternalStorageDirectory() + File.separator + ROOT_FOLDER_NAME;
@@ -54,6 +76,43 @@ public class MapsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        flSos = findViewById(R.id.fl_sos);
+        flSos.setVisibility(View.GONE);
+        llPolice = findViewById(R.id.ll_police);
+        llPolice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getEmergencyContactInfo("police.csv");
+                compileSms();
+                flSos.setVisibility(View.GONE);
+            }
+        });
+        llHospital = findViewById(R.id.ll_hospital);
+        llHospital.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getEmergencyContactInfo("hospital.csv");
+                compileSms();
+                flSos.setVisibility(View.GONE);
+            }
+        });
+        llGarage = findViewById(R.id.ll_garage);
+        llGarage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getEmergencyContactInfo("garage.csv");
+                compileSms();
+                flSos.setVisibility(View.GONE);
+            }
+        });
+        llClose = findViewById(R.id.ll_close);
+        llClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flSos.setVisibility(View.GONE);
+            }
+        });
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.new_logo);
@@ -78,8 +137,8 @@ public class MapsActivity extends AppCompatActivity {
                     HomeFragment.whatNext = "hospital.csv";
                     HomeFragment.readX("hospital.csv");
                 } else if(destination.getLabel().equals("Garage")) {
-                    HomeFragment.whatNext = "petrolPumps.csv";
-                    HomeFragment.readX("petrolPumps.csv");
+                    HomeFragment.whatNext = "garage.csv";
+                    HomeFragment.readX("garage.csv");
                 } else if(destination.getLabel().equals("Petrol pump")) {
                     HomeFragment.whatNext = "petrolPumps.csv";
                     HomeFragment.readX("petrolPumps.csv");
@@ -175,7 +234,8 @@ public class MapsActivity extends AppCompatActivity {
         } else if (id == R.id.action_profile) {
             goToProfileActivity();
         } else if (id == R.id.action_sos) {
-            compileSms();
+            flSos.setVisibility(View.VISIBLE);
+//            compileSms();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -266,5 +326,74 @@ public class MapsActivity extends AppCompatActivity {
             sendSMS(num3, SMS_CONTENT);
         }
 
+    }
+
+
+
+    public void getEmergencyContactInfo(String fileName) {
+        HashMap<CsvRow,Float> allLocations = new HashMap<>();
+        File file = new File(MapsActivity.ROOT_PATH_FOR_SAVING_TRIP_FOLDERS, fileName);
+        CsvReader csvReader = new CsvReader();
+        try (CsvParser csvParser = csvReader.parse(file, StandardCharsets.UTF_8)) {
+            CsvRow row;
+            while ((row = csvParser.nextRow()) != null) {
+                if (!row.getField(1).equals("latitude")) {
+                    Double lat = Double.parseDouble(row.getField(1));
+                    Double lon = Double.parseDouble(row.getField(2));
+                    float[] dist = new float[1];
+                    Location.distanceBetween(HomeFragment.lastLocation.getLatitude(), HomeFragment.lastLocation.getLongitude(), lat, lon, dist);
+                    allLocations.put(row, (Float)dist[0]);
+
+                    System.out.println("First column of line: " + row.getField(0));
+                    System.out.println("Distance: " + dist[0]);
+                }
+            }
+
+            allLocations = HomeFragment.sortByValues(allLocations);
+            Set set = allLocations.entrySet();
+            Iterator iterator = set.iterator();
+            int loc = 0;
+
+            while(iterator.hasNext()) {
+                if (loc == 2) {
+                    break;
+                }
+                Map.Entry me = (Map.Entry)iterator.next();
+                CsvRow row1 = (CsvRow) me.getKey();
+                Double lat = Double.parseDouble(row1.getField(1));
+                Double lon = Double.parseDouble(row1.getField(2));
+
+                compileSmsViaPhone(row1.getField(3), row1.getField(0), (Float)me.getValue());
+                System.out.print(me.getKey() + ": ");
+                System.out.println(me.getValue());
+                loc +=1;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void compileSmsViaPhone(String Phone, String Name, Float distance){
+
+        Log.e("CLIENT MESSAGE", "SENT!!!!!!!!!!!!" + Name +  "-" +distance );
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String myName = sharedPref.getString( "Your_Name", null);
+        String SMS_CONTENT = Name + ": Someone needs help at " + round(distance/1000.0) + "Km. Your Client, ";
+        if (myName != null) {
+            SMS_CONTENT = SMS_CONTENT + myName;
+        }
+
+        SMS_CONTENT = SMS_CONTENT + " , at location: ";
+
+        String location = "http://maps.google.com/maps?daddr=" + HomeFragment.lastLocation.getLatitude() + "," + HomeFragment.lastLocation.getLongitude();// + "&daddr=null,null"
+
+        SMS_CONTENT = SMS_CONTENT + location;
+
+        SMS_CONTENT = SMS_CONTENT + " needs help.";
+
+        sendSMS("0"+Phone, SMS_CONTENT);
+
+        Log.e("CLIENT MESSAGE", "SENT!!!!!!!!!!!!");
     }
 }

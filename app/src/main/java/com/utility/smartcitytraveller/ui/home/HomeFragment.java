@@ -267,7 +267,7 @@ public class HomeFragment extends Fragment {
         lastLocationMarker.showInfoWindow();
     }
 
-    private static HashMap sortByValues(HashMap map) {
+    public static HashMap sortByValues(HashMap map) {
         List list = new LinkedList(map.entrySet());
         // Defined Custom Comparator here
         Collections.sort(list, new Comparator() {

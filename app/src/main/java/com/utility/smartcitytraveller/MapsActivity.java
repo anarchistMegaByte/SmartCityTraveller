@@ -119,7 +119,7 @@ public class MapsActivity extends AppCompatActivity {
         getSupportActionBar().setHideOffset(0);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
         getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setTitle(Html.fromHtml("<font color='#000000'>Smart City Traveller</font>"));
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#000000'>TravEase</font>"));
 //        getSupportActionBar().setTitle("Smart City Traveller");
 
 

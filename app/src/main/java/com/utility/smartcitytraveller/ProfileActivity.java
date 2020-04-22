@@ -16,8 +16,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -39,11 +44,16 @@ public class ProfileActivity extends AppCompatActivity {
     int contact = 0;
 
     Button btnSve;
+    Utility utility = new Utility();
+
+    String username = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        username = utility.getLoggedInUserName(getApplicationContext());
 
         btnSve = findViewById(R.id.btn_save);
         btnSve.setOnClickListener(new View.OnClickListener() {
@@ -52,9 +62,9 @@ public class ProfileActivity extends AppCompatActivity {
                 String YourNamr = etYoueName.getText().toString();
                 SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("Your_Name", YourNamr);
+                editor.putString(username + "_Your_Name", YourNamr);
                 editor.commit();
-                finish();
+                decideWhereToGo(false);
             }
         });
         imgBtn1 = findViewById(R.id.img_btn_1);
@@ -62,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
         imgBtn3 = findViewById(R.id.img_btn_3);
         etYoueName = findViewById(R.id.et_your_name);
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        String nameY = sharedPref.getString( "Your_Name", null);
+        String nameY = sharedPref.getString( username + "_Your_Name", null);
         if (nameY != null) {
             etYoueName.setText(nameY + "");
         }
@@ -105,8 +115,31 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setTitle(Html.fromHtml("<font color='#000000'>TravEase</font>"));
+
+        decideWhereToGo(true);
+
     }
 
+    public void decideWhereToGo(boolean stay){
+        if (stay) {
+
+        }else {
+            finish();
+        }
+        if (utility.isProfileCompleted(getApplicationContext())) {
+            if (getIntent().hasExtra("coming_from") && getIntent().getStringExtra("coming_from").equals("login")) {
+                utility.goToUIntroActivity(getApplicationContext());
+            } else {
+                if (stay){
+
+                } else {
+                    utility.goToMapsActivity(ProfileActivity.this);
+                }
+            }
+        } else {
+            Toast.makeText(ProfileActivity.this, "Please fill all the details.", Toast.LENGTH_SHORT).show();
+        }
+    }
     public void pickContact() {
 
         Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
@@ -167,20 +200,20 @@ public class ProfileActivity extends AppCompatActivity {
     public void setSharedPref(String key, String name, String number) {
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("name_"+key, name);
-        editor.putString("number_"+key, number);
+        editor.putString(username + "_name_"+key, name);
+        editor.putString(username +"_number_"+key, number);
         editor.commit();
     }
 
     public void setTextViews() {
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        String name1 = sharedPref.getString( "name_1", null);
-        String name2 = sharedPref.getString( "name_2", null);
-        String name3 = sharedPref.getString( "name_3", null);
+        String name1 = sharedPref.getString( username + "_name_1", null);
+        String name2 = sharedPref.getString( username + "_name_2", null);
+        String name3 = sharedPref.getString( username + "_name_3", null);
 
-        String num1 = sharedPref.getString( "number_1", null);
-        String num2 = sharedPref.getString( "number_2", null);
-        String num3 = sharedPref.getString( "number_3", null);
+        String num1 = sharedPref.getString( username + "_number_1", null);
+        String num2 = sharedPref.getString( username + "_number_2", null);
+        String num3 = sharedPref.getString( username + "_number_3", null);
 
         if (name1 != null) {
             etName1.setText(name1 + "");
@@ -205,4 +238,5 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
     }
+
 }

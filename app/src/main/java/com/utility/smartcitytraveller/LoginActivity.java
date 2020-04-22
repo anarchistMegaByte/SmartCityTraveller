@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements FingerPrintAuthH
     public static final String KEY_STORE_NAME = "keyStoreName";
 
     Button btnLogin;
+    Button btnSignUp;
     TextView tvFacialRecognition;
 
     private FingerprintManager fingerprintManager;
@@ -64,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements FingerPrintAuthH
     ImageView ivClose;
     private TextInputEditText etUserName;
     private TextInputEditText etPassword;
-
+    Utility utility = new Utility();
 
 
     @Override
@@ -119,18 +120,30 @@ public class LoginActivity extends AppCompatActivity implements FingerPrintAuthH
             public void onClick(View view) {
                 String userName = etUserName.getText().toString();
                 String password = etPassword.getText().toString();
-                if (userPass.containsKey(userName)) {
-                    String passswordreal = userPass.get(userName);
-                    if (passswordreal.equals(password)) {
-                        markLoggedIn();
-                        goToMapsActivity();
+
+                SharedPreferences sharedPref =  getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                String dbUserNamePassword = sharedPref.getString( userName, null);
+                if (dbUserNamePassword != null) {
+                    if (dbUserNamePassword.equals(password)) {
+                        utility.saveUserNamePassword(getApplicationContext(), userName, password);
+                        utility.markLoggedIn(getApplicationContext());
+                        utility.makeDecisionOfWhereToGo(getApplicationContext());
                     } else {
                         Toast.makeText(LoginActivity.this, "Invalid Password.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(LoginActivity.this, "Invalid Username.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "User name does not exist. Please Sign up to create a new account.", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+
+        btnSignUp = findViewById(R.id.btn_signup);
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(i);
             }
         });
 
@@ -142,31 +155,12 @@ public class LoginActivity extends AppCompatActivity implements FingerPrintAuthH
             }
         });
 
-        if (isLoggedIn()) {
-            goToMapsActivity();
-        }
-        Log.e("LoginStatuas", isLoggedIn() + "");
+        utility.makeDecisionOfWhereToGo(getApplicationContext());
+        Log.e("LoginStatuas", utility.isLoggedIn(getApplicationContext()) + "");
 
     }
 
 
-    public void markLoggedIn() {
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.is_logged_in), true);
-        editor.commit();
-    }
-
-    public boolean isLoggedIn(){
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        return sharedPref.getBoolean( getString(R.string.is_logged_in), false);
-    }
-
-    public void goToMapsActivity() {
-        Intent mapsScreen = new Intent(LoginActivity.this, MapsActivity.class);
-        mapsScreen.addFlags(FLAG_ACTIVITY_CLEAR_TOP|FLAG_ACTIVITY_NEW_TASK|FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mapsScreen);
-    }
 
 
 
@@ -304,8 +298,8 @@ public class LoginActivity extends AppCompatActivity implements FingerPrintAuthH
 
     @Override
     public void onSuccessful() {
-        markLoggedIn();
-        goToMapsActivity();
+        utility.markLoggedIn(getApplicationContext());
+        utility.makeDecisionOfWhereToGo(getApplicationContext());
     }
 
     @Override

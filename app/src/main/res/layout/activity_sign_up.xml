@@ -62,7 +62,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_username"
+                        android:id="@+id/et_signup_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"/>
@@ -84,7 +84,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_password"
+                        android:id="@+id/et_signup_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
@@ -99,46 +99,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="end">
-                <Button
-                    android:id="@+id/btn_login"
-                    android:layout_marginRight="18dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:textSize="15sp"
-                    android:text="Login" />
 
                 <Button
-                    android:id="@+id/btn_signup"
+                    android:id="@+id/btn_create"
                     android:layout_marginRight="36dp"
-                    android:layout_marginLeft="18dp"
-                    android:layout_width="100dp"
+                    android:layout_below="@+id/et_password"
+                    android:layout_alignLeft="@+id/btn_login"
+                    android:layout_width="180dp"
                     android:layout_height="60dp"
                     android:textSize="15sp"
-                    android:text="Sign Up"
-                    android:backgroundTint="#ffffff"
-                    android:textColor="@color/colorPrimary"/>
+                    android:text="Create Profile" />
             </LinearLayout>
 
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign in using "
-                android:textSize="20sp"/>
-            <TextView
-                android:id="@+id/tv_facial_recognition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fingerprint Login"
-                android:textColor="#6666ff"
-                android:textSize="20sp" />
         </LinearLayout>
 
     </LinearLayout>

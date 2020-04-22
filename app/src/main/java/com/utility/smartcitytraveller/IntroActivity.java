@@ -19,13 +19,12 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class MainActivity extends AppCompatActivity {
-
-    Handler screenTimeHandler = new Handler();
-    Utility utility = new Utility();
+public class IntroActivity extends AppCompatActivity {
 
     FadeTextView ftv;
     String nameY;
+    Handler screenTimeHandler = new Handler();
+    Utility utility = new Utility();
     String username = null;
 
     @Override
@@ -36,58 +35,11 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         getSupportActionBar().hide();
-
-
-        if (utility.isLoggedIn(getApplicationContext())) {
-            if (utility.isProfileCompleted(getApplicationContext())) {
-                launchIntroScreen();
-            } else {
-                launchSplashScreen();
-            }
-        } else {
-            launchSplashScreen();
-        }
-
-
-    }
-
-
-
-
-    public void launchSplashScreen() {
-        setContentView(R.layout.activity_main);
-        //        setContentView(R.layout.activity_main);
-
-        if (utility.isLoggedIn(getApplicationContext())) {
-            if (utility.isProfileCompleted(getApplicationContext())) {
-                utility.goToUIntroActivity(MainActivity.this);
-            } else {
-                screenTimeHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        utility.goToProfileActivity(MainActivity.this, "login");
-                    }
-                }, 1500);
-
-            }
-        } else {
-            screenTimeHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    utility.goToLoginActivity(MainActivity.this);
-                }
-            }, 1500);
-
-        }
-
-    }
-
-    public void launchIntroScreen() {
         setContentView(R.layout.activity_intro);
         username = utility.getLoggedInUserName(getApplicationContext());
         ftv = findViewById(R.id.textview);
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        nameY = sharedPref.getString( username + "_Your_Name", null);
+        nameY = sharedPref.getString( username+"_Your_Name", null);
         if (nameY != null && nameY.trim().equals(""))  {
             nameY = "User";
         }
@@ -109,13 +61,17 @@ public class MainActivity extends AppCompatActivity {
                 screenTimeHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        utility.goToMapsActivity(MainActivity.this);
+                        utility.goToMapsActivity(IntroActivity.this);
                         finish();
                     }
-                }, 1000);
+                }, 1500);
 
             }
         });
-    }
-}
 
+    }
+
+
+
+
+}

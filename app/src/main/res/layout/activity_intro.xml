@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".IntroActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+        <com.hanks.htextview.typer.TyperTextView
+            android:id="@+id/textviewheader"
+            android:layout_marginLeft="36dp"
+            android:textSize="80sp"
+            android:gravity="left|bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text=""
+            app:charIncrease="1"
+            android:textColor="@color/colorPrimary"
+            app:typerSpeed="210" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:gravity="center">
+        <com.hanks.htextview.fade.FadeTextView
+            android:id="@+id/textview"
+            android:layout_marginLeft="36dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left|top"
+            android:letterSpacing="0.08"
+            android:lineSpacingMultiplier="1"
+            android:text=""
+            android:textColor="#fff"
+            android:textSize="60sp"
+            app:animationDuration="1500"/>
+    </LinearLayout>
+
+
+</LinearLayout>

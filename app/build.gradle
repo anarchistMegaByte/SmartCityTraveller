@@ -20,6 +20,7 @@ android {
     }
 }
 
+def htextview_version = "0.1.6"
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
@@ -32,6 +33,16 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'de.siegmar:fastcsv:1.0.3'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation "com.hanks:htextview-base:$htextview_version"        // base library
+
+    implementation "com.hanks:htextview-fade:$htextview_version"        // optional
+    implementation "com.hanks:htextview-line:$htextview_version"        // optional
+    implementation "com.hanks:htextview-rainbow:$htextview_version"     // optional
+    implementation "com.hanks:htextview-typer:$htextview_version"       // optional
+
+    implementation "com.hanks:htextview-scale:$htextview_version"       // optional
+    implementation "com.hanks:htextview-evaporate:$htextview_version"   // optional
+    implementation "com.hanks:htextview-fall:$htextview_version"        // optional
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
